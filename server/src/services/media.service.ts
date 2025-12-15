@@ -5,12 +5,17 @@ import { deleteFile } from '../utils/filesystem.js';
 
 export class MediaService {
   async getFileMetadata(filePath: string) {
-    const input = new Input({
-      source: new FilePathSource(filePath),
-      formats: ALL_FORMATS
-    });
-
+    let fileHandle: fs.FileHandle | null = null;
+    
     try {
+      // Ouvrir le fichier manuellement pour contrôler la fermeture
+      fileHandle = await fs.open(filePath, 'r');
+      
+      const input = new Input({
+        source: new FilePathSource(filePath),
+        formats: ALL_FORMATS
+      });
+
       const duration = await input.computeDuration();
       const videoTrack = await input.getPrimaryVideoTrack();
       const audioTrack = await input.getPrimaryAudioTrack();
@@ -32,7 +37,10 @@ export class MediaService {
         tags
       };
     } finally {
-      // Input n'a plus de méthode close() dans les versions récentes
+      // Fermer explicitement le fichier
+      if (fileHandle) {
+        await fileHandle.close();
+      }
     }
   }
 
