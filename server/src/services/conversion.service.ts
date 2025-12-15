@@ -75,17 +75,8 @@ export class ConversionService {
         
         console.warn(`Warning: Some tracks were discarded: ${discardedReasons}`);
         
-        // Si toutes les pistes sont abandonnées, lever une erreur explicite
-        const hasVideoTracks = conversion.videoTracks && conversion.videoTracks.length > 0;
-        const hasAudioTracks = conversion.audioTracks && conversion.audioTracks.length > 0;
-        
-        if (!hasVideoTracks && !hasAudioTracks) {
-          throw new Error(
-            `Cannot convert file: All tracks were discarded. ` +
-            `Reasons: ${discardedReasons}. ` +
-            `This may be due to unsupported codecs. Try a different source file or output format.`
-          );
-        }
+        // Si toutes les pistes sont abandonnées, essayer quand même la conversion
+        // MediaBunny gèrera l'erreur si nécessaire
       }
       
       await conversion.execute();
@@ -105,10 +96,13 @@ export class ConversionService {
       }
       
       // Relancer l'erreur avec un message plus clair
-      if (error.message.includes('discarded')) {
-        throw error;
+      if (error.message && error.message.includes('discarded')) {
+        throw new Error(
+          `Cannot convert file: All tracks were discarded due to unsupported codecs. ` +
+          `Please use a file with H.264 video and AAC audio, or convert it first with FFmpeg.`
+        );
       } else {
-        throw new Error(`Conversion failed: ${error.message}`);
+        throw new Error(`Conversion failed: ${error.message || 'Unknown error'}`);
       }
     }
   }
