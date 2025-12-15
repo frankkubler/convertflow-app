@@ -1,12 +1,12 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { Input, ALL_FORMATS, FileSource } from 'mediabunny';
+import { Input, ALL_FORMATS, FilePathSource } from 'mediabunny';
 import { deleteFile } from '../utils/filesystem.js';
 
 export class MediaService {
   async getFileMetadata(filePath: string) {
     const input = new Input({
-      source: new FileSource(filePath),
+      source: new FilePathSource(filePath),
       formats: ALL_FORMATS
     });
 
@@ -22,19 +22,17 @@ export class MediaService {
           codec: videoTrack.codec,
           width: videoTrack.displayWidth,
           height: videoTrack.displayHeight,
-          rotation: videoTrack.rotation,
-          frameRate: videoTrack.frameRate
+          rotation: videoTrack.rotation
         } : null,
         audio: audioTrack ? {
           codec: audioTrack.codec,
           sampleRate: audioTrack.sampleRate,
-          channels: audioTrack.numberOfChannels,
-          bitrate: audioTrack.bitrate
+          channels: audioTrack.numberOfChannels
         } : null,
         tags
       };
     } finally {
-      await input.close();
+      // Input n'a plus de méthode close() dans les versions récentes
     }
   }
 

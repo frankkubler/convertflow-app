@@ -5,12 +5,12 @@ import {
   Output, 
   Conversion,
   ALL_FORMATS,
-  FileSource,
-  FileTarget,
+  FilePathSource,
+  FilePathTarget,
   Mp4OutputFormat,
   WebMOutputFormat,
   Mp3OutputFormat,
-  WaveOutputFormat
+  WavOutputFormat
 } from 'mediabunny';
 import { MediaService } from './media.service.js';
 
@@ -35,7 +35,7 @@ export class ConversionService {
         return new Mp3OutputFormat();
       case 'wav':
       case 'wave':
-        return new WaveOutputFormat();
+        return new WavOutputFormat();
       default:
         throw new Error(`Unsupported output format: ${format}`);
     }
@@ -55,13 +55,13 @@ export class ConversionService {
     const outputPath = path.join(outputDir, `${outputId}.${options.outputFormat}`);
 
     const input = new Input({
-      source: new FileSource(sourcePath),
+      source: new FilePathSource(sourcePath),
       formats: ALL_FORMATS
     });
 
     const output = new Output({
       format: this.getOutputFormat(options.outputFormat),
-      target: new FileTarget(outputPath)
+      target: new FilePathTarget(outputPath)
     });
 
     try {
@@ -74,7 +74,7 @@ export class ConversionService {
         filename: path.basename(outputPath)
       };
     } finally {
-      await input.close();
+      // Pas de close() nécessaire dans les versions récentes
     }
   }
 
