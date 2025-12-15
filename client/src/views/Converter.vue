@@ -13,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useConversionStore } from '@/stores/conversion.store';
 import { storeToRefs } from 'pinia';
 import FileUploader from '@/components/FileUploader.vue';
