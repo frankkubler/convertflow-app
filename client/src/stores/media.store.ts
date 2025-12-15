@@ -8,6 +8,8 @@ export interface MediaFile {
   filename: string;
   size: number;
   mimetype: string;
+  createdAt?: Date;
+  modifiedAt?: Date;
   metadata?: any;
 }
 

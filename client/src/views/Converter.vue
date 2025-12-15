@@ -17,9 +17,6 @@ import { ref } from 'vue';
 import FileUpload from '@/components/FileUpload.vue';
 import MediaInfo from '@/components/MediaInfo.vue';
 import ConversionPanel from '@/components/ConversionPanel.vue';
-import { useMediaStore } from '@/stores/media.store';
-
-const mediaStore = useMediaStore();
 
 const currentFileId = ref<string | null>(null);
 const currentFileMetadata = ref<any>(null);

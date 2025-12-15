@@ -24,7 +24,7 @@
           </svg>
           <p class="text-lg mb-2">Glissez-déposez un fichier ici</p>
           <p class="text-sm text-base-content/70 mb-4">ou</p>
-          <button @click="$refs.fileInput.click()" class="btn btn-primary">
+          <button @click="fileInput?.click()" class="btn btn-primary">
             Sélectionner un fichier
           </button>
           <p class="text-xs text-base-content/50 mt-4">
