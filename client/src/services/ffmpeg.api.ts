@@ -1,5 +1,4 @@
 import api from './api';
-import axios from 'axios';
 
 export interface FFmpegMetadata {
   duration: number;
