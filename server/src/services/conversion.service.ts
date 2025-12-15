@@ -66,6 +66,28 @@ export class ConversionService {
 
     try {
       const conversion = await Conversion.init({ input, output });
+      
+      // Vérifier s'il y a des pistes abandonnées
+      if (conversion.discardedTracks && conversion.discardedTracks.length > 0) {
+        const discardedReasons = conversion.discardedTracks.map(dt => 
+          `${dt.track.constructor.name}: ${dt.reason}`
+        ).join(', ');
+        
+        console.warn(`Warning: Some tracks were discarded: ${discardedReasons}`);
+        
+        // Si toutes les pistes sont abandonnées, lever une erreur explicite
+        const hasVideoTracks = conversion.videoTracks && conversion.videoTracks.length > 0;
+        const hasAudioTracks = conversion.audioTracks && conversion.audioTracks.length > 0;
+        
+        if (!hasVideoTracks && !hasAudioTracks) {
+          throw new Error(
+            `Cannot convert file: All tracks were discarded. ` +
+            `Reasons: ${discardedReasons}. ` +
+            `This may be due to unsupported codecs. Try a different source file or output format.`
+          );
+        }
+      }
+      
       await conversion.execute();
 
       return {
@@ -73,8 +95,21 @@ export class ConversionService {
         outputPath: `/output/${path.basename(outputPath)}`,
         filename: path.basename(outputPath)
       };
-    } finally {
-      // Pas de close() nécessaire dans les versions récentes
+    } catch (error: any) {
+      // Nettoyer le fichier de sortie en cas d'erreur
+      try {
+        const fs = await import('fs/promises');
+        await fs.unlink(outputPath);
+      } catch (cleanupError) {
+        // Ignorer les erreurs de nettoyage
+      }
+      
+      // Relancer l'erreur avec un message plus clair
+      if (error.message.includes('discarded')) {
+        throw error;
+      } else {
+        throw new Error(`Conversion failed: ${error.message}`);
+      }
     }
   }
 
