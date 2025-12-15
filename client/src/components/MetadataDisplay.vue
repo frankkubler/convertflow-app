@@ -1,75 +1,95 @@
 <template>
-  <div v-if="metadata" class="card bg-base-100 shadow-xl">
+  <div v-if="metadata" class="card bg-gradient-to-br from-base-100 to-base-200 shadow-2xl border border-base-300">
     <div class="card-body">
-      <h2 class="card-title">ℹ️ Informations du fichier</h2>
+      <h2 class="card-title text-2xl mb-4">
+        <span class="text-3xl">ℹ️</span>
+        Informations du fichier
+      </h2>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Général -->
-        <div class="space-y-2">
-          <h3 class="font-semibold text-lg">Général</h3>
-          <div class="stats stats-vertical shadow">
-            <div class="stat">
-              <div class="stat-title">Durée</div>
-              <div class="stat-value text-2xl">{{ formatDuration(metadata.duration) }}</div>
+        <div class="space-y-3">
+          <h3 class="font-semibold text-lg flex items-center gap-2">
+            <div class="badge badge-primary badge-sm"></div>
+            Général
+          </h3>
+          <div class="bg-base-200/50 rounded-xl p-4 space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-sm opacity-70">Durée</span>
+              <span class="font-bold text-primary">{{ formatDuration(metadata.duration) }}</span>
             </div>
-            <div class="stat">
-              <div class="stat-title">Format</div>
-              <div class="stat-value text-xl">{{ metadata.format }}</div>
+            <div class="divider my-1"></div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm opacity-70">Format</span>
+              <span class="font-mono text-sm badge badge-outline">{{ metadata.format }}</span>
             </div>
-            <div class="stat">
-              <div class="stat-title">Taille</div>
-              <div class="stat-value text-xl">{{ formatSize(metadata.size) }}</div>
+            <div class="divider my-1"></div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm opacity-70">Taille</span>
+              <span class="font-bold">{{ formatSize(metadata.size) }}</span>
             </div>
-            <div class="stat">
-              <div class="stat-title">Bitrate</div>
-              <div class="stat-value text-xl">{{ formatBitrate(metadata.bitrate) }}</div>
+            <div class="divider my-1"></div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm opacity-70">Bitrate</span>
+              <span class="font-bold text-secondary">{{ formatBitrate(metadata.bitrate) }}</span>
             </div>
           </div>
         </div>
 
-        <!-- Vidéo -->
-        <div class="space-y-2">
+        <!-- Vidéo + Audio -->
+        <div class="space-y-3">
           <div v-if="metadata.video">
-            <h3 class="font-semibold text-lg">Vidéo</h3>
-            <div class="stats stats-vertical shadow">
-              <div class="stat">
-                <div class="stat-title">Codec</div>
-                <div class="stat-value text-2xl">{{ metadata.video.codec.toUpperCase() }}</div>
+            <h3 class="font-semibold text-lg flex items-center gap-2 mb-3">
+              <div class="badge badge-secondary badge-sm"></div>
+              Vidéo
+            </h3>
+            <div class="bg-base-200/50 rounded-xl p-4 space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-sm opacity-70">Codec</span>
+                <span class="font-mono font-bold text-secondary">{{ metadata.video.codec.toUpperCase() }}</span>
               </div>
-              <div class="stat">
-                <div class="stat-title">Résolution</div>
-                <div class="stat-value text-xl">{{ metadata.video.width }}x{{ metadata.video.height }}</div>
+              <div class="divider my-1"></div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm opacity-70">Résolution</span>
+                <span class="font-bold">{{ metadata.video.width }}x{{ metadata.video.height }}</span>
               </div>
-              <div class="stat">
-                <div class="stat-title">FPS</div>
-                <div class="stat-value text-xl">{{ metadata.video.fps.toFixed(2) }}</div>
+              <div class="divider my-1"></div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm opacity-70">FPS</span>
+                <span class="font-bold">{{ metadata.video.fps.toFixed(2) }}</span>
               </div>
-              <div class="stat">
-                <div class="stat-title">Bitrate</div>
-                <div class="stat-value text-xl">{{ formatBitrate(metadata.video.bitrate) }}</div>
+              <div class="divider my-1"></div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm opacity-70">Bitrate</span>
+                <span class="font-bold">{{ formatBitrate(metadata.video.bitrate) }}</span>
               </div>
             </div>
           </div>
 
-          <!-- Audio -->
           <div v-if="metadata.audio">
-            <h3 class="font-semibold text-lg mt-4">Audio</h3>
-            <div class="stats stats-vertical shadow">
-              <div class="stat">
-                <div class="stat-title">Codec</div>
-                <div class="stat-value text-2xl">{{ metadata.audio.codec.toUpperCase() }}</div>
+            <h3 class="font-semibold text-lg flex items-center gap-2 mb-3 mt-4">
+              <div class="badge badge-accent badge-sm"></div>
+              Audio
+            </h3>
+            <div class="bg-base-200/50 rounded-xl p-4 space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-sm opacity-70">Codec</span>
+                <span class="font-mono font-bold text-accent">{{ metadata.audio.codec.toUpperCase() }}</span>
               </div>
-              <div class="stat">
-                <div class="stat-title">Sample Rate</div>
-                <div class="stat-value text-xl">{{ metadata.audio.sampleRate }} Hz</div>
+              <div class="divider my-1"></div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm opacity-70">Sample Rate</span>
+                <span class="font-bold">{{ metadata.audio.sampleRate }} Hz</span>
               </div>
-              <div class="stat">
-                <div class="stat-title">Canaux</div>
-                <div class="stat-value text-xl">{{ metadata.audio.channels }}</div>
+              <div class="divider my-1"></div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm opacity-70">Canaux</span>
+                <span class="font-bold">{{ metadata.audio.channels }}</span>
               </div>
-              <div class="stat">
-                <div class="stat-title">Bitrate</div>
-                <div class="stat-value text-xl">{{ formatBitrate(metadata.audio.bitrate) }}</div>
+              <div class="divider my-1"></div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm opacity-70">Bitrate</span>
+                <span class="font-bold">{{ formatBitrate(metadata.audio.bitrate) }}</span>
               </div>
             </div>
           </div>
