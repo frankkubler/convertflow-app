@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import { readdirSync, statSync } from 'fs';
 import path from 'path';
 import { Input, ALL_FORMATS, FilePathSource } from 'mediabunny';
 import { deleteFile } from '../utils/filesystem.js';
@@ -38,32 +38,31 @@ export class MediaService {
     }
   }
 
-  async findFileById(directory: string, fileId: string): Promise<string[]> {
-    const files = await fs.readdir(directory);
+  findFileById(directory: string, fileId: string): string[] {
+    const files = readdirSync(directory);
     const matchedFiles = files.filter(file => file.startsWith(fileId));
     return matchedFiles.map(file => path.join(directory, file));
   }
 
-  async deleteFileById(fileId: string) {
+  deleteFileById(fileId: string) {
     const uploadDir = process.env.UPLOAD_DIR || './uploads';
     const outputDir = process.env.OUTPUT_DIR || './output';
     
-    const uploadFiles = await this.findFileById(uploadDir, fileId);
-    const outputFiles = await this.findFileById(outputDir, fileId);
+    const uploadFiles = this.findFileById(uploadDir, fileId);
+    const outputFiles = this.findFileById(outputDir, fileId);
     
     for (const file of [...uploadFiles, ...outputFiles]) {
-      await deleteFile(file);
+      deleteFile(file);
     }
   }
 
-  async listAllFiles() {
+  listAllFiles() {
     const uploadDir = process.env.UPLOAD_DIR || './uploads';
-    const files = await fs.readdir(uploadDir);
+    const files = readdirSync(uploadDir);
     
-    const fileInfos = await Promise.all(
-      files.map(async (filename) => {
+    const fileInfos = files.map((filename) => {
         const filePath = path.join(uploadDir, filename);
-        const stats = await fs.stat(filePath);
+        const stats = statSync(filePath);
         
         return {
           id: path.parse(filename).name,
@@ -72,8 +71,7 @@ export class MediaService {
           createdAt: stats.birthtime,
           modifiedAt: stats.mtime
         };
-      })
-    );
+      });
     
     return fileInfos.sort((a, b) => b.modifiedAt.getTime() - a.modifiedAt.getTime());
   }

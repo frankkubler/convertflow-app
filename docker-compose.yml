@@ -4,7 +4,7 @@ services:
   # Redis pour la queue Bull
   redis:
     image: redis:7-alpine
-    container_name: mediabunny-redis
+    container_name: convertflow-redis
     restart: unless-stopped
     ports:
       - "6379:6379"
@@ -19,7 +19,7 @@ services:
   # Application principale
   app:
     build: .
-    container_name: mediabunny-app
+    container_name: convertflow-app
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -29,7 +29,7 @@ services:
       - UPLOAD_DIR=/app/server/uploads
       - OUTPUT_DIR=/app/server/output
       - REDIS_URL=redis://redis:6379
-      - MAX_FILE_SIZE=500000000
+      - MAX_FILE_SIZE=10737418240
     volumes:
       - ./server/uploads:/app/server/uploads
       - ./server/output:/app/server/output

@@ -3,6 +3,7 @@ import { FFmpegService } from '../services/ffmpeg.service.js';
 import { conversionQueue } from '../queues/conversion.queue.js';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { readdirSync } from 'fs';
 
 export class FFmpegController {
   private ffmpegService = new FFmpegService();
@@ -16,7 +17,7 @@ export class FFmpegController {
       const uploadDir = process.env.UPLOAD_DIR || './uploads';
       
       // Trouver le fichier
-      const files = await this.findFilesByPrefix(uploadDir, fileId);
+      const files = this.findFilesByPrefix(uploadDir, fileId);
       if (!files.length) {
         return res.status(404).json({ success: false, message: 'Fichier non trouvé' });
       }
@@ -43,7 +44,7 @@ export class FFmpegController {
       const uploadDir = process.env.UPLOAD_DIR || './uploads';
       const outputDir = process.env.OUTPUT_DIR || './output';
       
-      const files = await this.findFilesByPrefix(uploadDir, fileId);
+      const files = this.findFilesByPrefix(uploadDir, fileId);
       if (!files.length) {
         return res.status(404).json({ success: false, message: 'Fichier non trouvé' });
       }
@@ -120,6 +121,8 @@ export class FFmpegController {
       const progress = job.progress();
       const result = job.returnvalue;
 
+      console.log(`[Controller] Job ${jobId} - State: ${state}, Progress: ${progress}`);
+
       res.json({
         success: true,
         jobId: job.id,
@@ -146,7 +149,7 @@ export class FFmpegController {
       const uploadDir = process.env.UPLOAD_DIR || './uploads';
       const outputDir = process.env.OUTPUT_DIR || './output';
       
-      const files = await this.findFilesByPrefix(uploadDir, fileId);
+      const files = this.findFilesByPrefix(uploadDir, fileId);
       if (!files.length) {
         return res.status(404).json({ success: false, message: 'Fichier non trouvé' });
       }
@@ -186,7 +189,7 @@ export class FFmpegController {
       const uploadDir = process.env.UPLOAD_DIR || './uploads';
       const outputDir = process.env.OUTPUT_DIR || './output';
       
-      const files = await this.findFilesByPrefix(uploadDir, fileId);
+      const files = this.findFilesByPrefix(uploadDir, fileId);
       if (!files.length) {
         return res.status(404).json({ success: false, message: 'Fichier non trouvé' });
       }
@@ -223,7 +226,7 @@ export class FFmpegController {
       const uploadDir = process.env.UPLOAD_DIR || './uploads';
       const outputDir = process.env.OUTPUT_DIR || './output';
       
-      const files = await this.findFilesByPrefix(uploadDir, fileId);
+      const files = this.findFilesByPrefix(uploadDir, fileId);
       if (!files.length) {
         return res.status(404).json({ success: false, message: 'Fichier non trouvé' });
       }
@@ -261,7 +264,7 @@ export class FFmpegController {
       const uploadDir = process.env.UPLOAD_DIR || './uploads';
       const outputDir = process.env.OUTPUT_DIR || './output';
       
-      const files = await this.findFilesByPrefix(uploadDir, fileId);
+      const files = this.findFilesByPrefix(uploadDir, fileId);
       if (!files.length) {
         return res.status(404).json({ success: false, message: 'Fichier non trouvé' });
       }
@@ -298,7 +301,7 @@ export class FFmpegController {
       const uploadDir = process.env.UPLOAD_DIR || './uploads';
       const outputDir = process.env.OUTPUT_DIR || './output';
       
-      const files = await this.findFilesByPrefix(uploadDir, fileId);
+      const files = this.findFilesByPrefix(uploadDir, fileId);
       if (!files.length) {
         return res.status(404).json({ success: false, message: 'Fichier non trouvé' });
       }
@@ -322,9 +325,8 @@ export class FFmpegController {
   };
 
   // Helper
-  private async findFilesByPrefix(directory: string, prefix: string): Promise<string[]> {
-    const fs = await import('fs/promises');
-    const files = await fs.readdir(directory);
+  private findFilesByPrefix(directory: string, prefix: string): string[] {
+    const files = readdirSync(directory);
     const matchedFiles = files.filter(file => file.startsWith(prefix));
     return matchedFiles.map(file => path.join(directory, file));
   }

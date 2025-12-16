@@ -5,11 +5,14 @@ import compression from 'compression';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fs from 'fs/promises';
+import { mkdirSync, existsSync, accessSync } from 'fs';
 
 // Routes
 import mediaRoutes from './routes/media.routes.js';
 import ffmpegRoutes from './routes/ffmpeg.routes.js';
+
+// Queue workers (important : doit être importé pour que le worker démarre)
+import './queues/conversion.queue.js';
 
 // Configuration
 dotenv.config();
@@ -28,15 +31,20 @@ app.use(cors({
   origin: process.env.CORS_ORIGIN || '*'
 }));
 app.use(compression());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10gb' }));
+app.use(express.urlencoded({ extended: true, limit: '10gb' }));
 
 // Créer les répertoires nécessaires
 const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, '../uploads');
 const outputDir = process.env.OUTPUT_DIR || path.join(__dirname, '../output');
 
-await fs.mkdir(uploadDir, { recursive: true });
-await fs.mkdir(outputDir, { recursive: true });
+// Utiliser mkdirSync pour éviter les warnings de FileHandle
+if (!existsSync(uploadDir)) {
+  mkdirSync(uploadDir, { recursive: true });
+}
+if (!existsSync(outputDir)) {
+  mkdirSync(outputDir, { recursive: true });
+}
 
 console.log('✓ Directories created');
 
@@ -50,7 +58,7 @@ app.use('/output', express.static(outputDir));
 // Servir le client (production)
 const clientPath = path.join(__dirname, '../../client/dist');
 try {
-  await fs.access(clientPath);
+  accessSync(clientPath);
   app.use(express.static(clientPath));
   app.get('*', (req, res) => {
     res.sendFile(path.join(clientPath, 'index.html'));

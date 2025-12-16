@@ -97,8 +97,10 @@ export class ConversionService {
     } catch (error: any) {
       // Nettoyer le fichier de sortie en cas d'erreur
       try {
-        const fs = await import('fs/promises');
-        await fs.unlink(outputPath).catch(() => {});
+        const { unlinkSync } = await import('fs');
+        try {
+          unlinkSync(outputPath);
+        } catch {}
       } catch (cleanupError) {
         // Ignorer les erreurs de nettoyage
       }

@@ -50,7 +50,7 @@ export class MediaController {
   deleteFile = async (req: Request, res: Response) => {
     try {
       const { fileId } = req.params;
-      await this.mediaService.deleteFileById(fileId);
+      this.mediaService.deleteFileById(fileId);
       res.json({ success: true, message: 'File deleted' });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
@@ -59,7 +59,7 @@ export class MediaController {
 
   listFiles = async (req: Request, res: Response) => {
     try {
-      const files = await this.mediaService.listAllFiles();
+      const files = this.mediaService.listAllFiles();
       res.json({ success: true, files });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });

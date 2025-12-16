@@ -2,21 +2,31 @@ import Queue from 'bull';
 import { FFmpegService } from '../services/ffmpeg.service.js';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs/promises';
+import { readdirSync } from 'fs';
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
-export const conversionQueue = new Queue('conversion', REDIS_URL);
+export const conversionQueue = new Queue('conversion', REDIS_URL, {
+  settings: {
+    lockDuration: 300000, // 5 minutes - évite "job stalled" pour les longues conversions
+    stalledInterval: 60000, // Vérifier les jobs bloqués toutes les 60s
+    maxStalledCount: 2 // Nombre de tentatives avant de marquer comme échoué
+  }
+});
 
-conversionQueue.process('convert', async (job) => {
+console.log('✓ Bull Queue worker started for conversion jobs');
+
+// Traiter 3 jobs en parallèle pour permettre plusieurs conversions simultanées
+conversionQueue.process('convert', 3, async (job) => {
+  console.log(`[Queue] Processing job ${job.id}...`);
   const ffmpegService = new FFmpegService();
   const { fileId, outputFormat, videoCodec, audioCodec, videoBitrate, audioBitrate } = job.data;
 
   const uploadDir = process.env.UPLOAD_DIR || './uploads';
   const outputDir = process.env.OUTPUT_DIR || './output';
 
-  // Trouver le fichier
-  const files = await fs.readdir(uploadDir);
+  // Trouver le fichier (utiliser readdirSync pour éviter warnings FileHandle)
+  const files = readdirSync(uploadDir);
   const matchedFiles = files.filter(file => file.startsWith(fileId));
   
   if (!matchedFiles.length) {

@@ -100,27 +100,33 @@ export const useConversionStore = defineStore('conversion', () => {
     }
   }
 
-  async function pollJobStatus(id: string) {
-    const poll = async () => {
-      try {
-        const status = await ffmpegAPI.getJobStatus(id);
-        conversionProgress.value = status.progress;
+  async function pollJobStatus(id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const poll = async () => {
+        try {
+          const status = await ffmpegAPI.getJobStatus(id);
+          console.log('[Store] Job status:', status);
+          console.log('[Store] AVANT update - conversionProgress.value:', conversionProgress.value);
+          conversionProgress.value = status.progress;
+          console.log('[Store] APRES update - conversionProgress.value:', conversionProgress.value);
 
-        if (status.state === 'completed') {
-          result.value = status.result;
-          return;
-        } else if (status.state === 'failed') {
-          throw new Error('Conversion échouée');
-        } else {
-          // Continuer à suivre
-          setTimeout(poll, 1000);
+          if (status.state === 'completed') {
+            result.value = status.result;
+            resolve();
+          } else if (status.state === 'failed') {
+            reject(new Error('Conversion échouée'));
+          } else {
+            // Continuer à suivre
+            setTimeout(poll, 1000);
+          }
+        } catch (err: any) {
+          error.value = err.message;
+          reject(err);
         }
-      } catch (err: any) {
-        error.value = err.message;
-      }
-    };
+      };
 
-    await poll();
+      poll();
+    });
   }
 
   function reset() {
