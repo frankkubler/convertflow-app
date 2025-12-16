@@ -14,7 +14,8 @@
       </div>
     </div>
   </nav>
+</template>
+
 <script setup>
 import ThemeToggle from './ThemeToggle.vue';
 </script>
-</template>
