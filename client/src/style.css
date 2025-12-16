@@ -3,6 +3,7 @@
 @plugin "daisyui";
 
 /* Palette soft inspirée de hr-dashboard */
+
 :root {
   --soft-50: #fafaf9;
   --soft-100: #f5f5f4;
@@ -27,6 +28,62 @@ body {
 .dark body {
   background: var(--soft-900);
   color: #f3f3f3;
+}
+
+/* Fond principal en mode sombre */
+.gradient-bg {
+  background: var(--soft-50);
+}
+.dark .gradient-bg {
+  background: var(--soft-900);
+}
+
+/* Cartes et glassmorphism : backgrounds adaptés au dark */
+.glass-card, .card {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: box-shadow 0.3s, transform 0.3s, background 0.3s;
+  color: #222;
+}
+.glass-card:hover, .card:hover {
+  box-shadow: 0 12px 40px 0 rgba(59, 130, 246, 0.15);
+  transform: translateY(-4px) scale(1.01);
+}
+.dark .glass-card, .dark .card {
+  background: rgba(24, 24, 27, 0.92);
+  color: #f3f3f3;
+}
+
+/* Statistiques et widgets */
+.stat-card {
+  background: var(--soft-100);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.07);
+  transition: box-shadow 0.3s, transform 0.3s, background 0.3s;
+  color: #222;
+}
+.stat-card:hover {
+  box-shadow: 0 6px 24px rgba(59,130,246,0.13);
+  transform: translateY(-2px) scale(1.01);
+}
+.dark .stat-card {
+  background: #23272f;
+  color: #f3f3f3;
+}
+
+/* Correction du texte trop clair dans les sections */
+.dark .text-gray-900, .dark .text-gray-700 {
+  color: #f3f3f3 !important;
+}
+.dark .text-gray-500 {
+  color: #d1d5db !important;
+}
+.dark .text-gray-400 {
+  color: #a8a29e !important;
 }
 
 /* Titre dégradé */
