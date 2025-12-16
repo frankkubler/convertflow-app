@@ -79,18 +79,19 @@ VITE_API_URL=http://localhost:3000/api
 
 ## 🔍 Vérification de l'installation
 
-### Vérifier la version de MediaBunny
+### Vérifier la version de ConvertFlow
 
 ```bash
+
 # Dans le serveur
 cd server
-node -e "import('mediabunny').then(mb => console.log('MediaBunny version:', require('./package.json').dependencies.mediabunny))"
+node -v
 
 # Dans le client
 cd client
-npm list mediabunny
-```
+npm list
 
+Vous devez voir : **convertflow-app**
 Vous devez voir : **1.26.0**
 
 ### Tester l'API
@@ -100,12 +101,12 @@ Vous devez voir : **1.26.0**
 curl http://localhost:3000/api/health
 
 # Réponse attendue:
-# {"status":"ok","mediabunny":"1.26.0"}
+# {"status":"ok","convertflow":"2.0.0"}
 ```
 
 ## 🐛 Résolution des problèmes
 
-### Problème 1 : Mauvaise version de MediaBunny
+### Problème 1 : Mauvaise version de ConvertFlow
 
 **Symptôme** : Erreurs TypeScript ou fonctionnalités manquantes
 
@@ -119,8 +120,8 @@ rm -rf package-lock.json server/package-lock.json client/package-lock.json
 npm run install:all
 
 # Vérifier
-cd server && npm list mediabunny
-cd ../client && npm list mediabunny
+cd server && npm list
+cd ../client && npm list
 ```
 
 ### Problème 2 : Erreurs de build Docker
@@ -143,42 +144,42 @@ Si vous voyez des warnings sur les versions :
 ```bash
 # Forcer l'installation exacte
 cd server
-npm install mediabunny@1.26.0 --save-exact
+npm install
 
 cd ../client
-npm install mediabunny@1.26.0 --save-exact
+npm install
 ```
 
 ## 📦 Versions des dépendances principales
 
 ### Serveur
 - **Node.js** : 20.x ou supérieur
-- **MediaBunny** : 1.26.0 (fixé)
+- **ConvertFlow** : 2.0.0 (fixé)
 - **Express** : ^4.21.2
 - **TypeScript** : ^5.9.3
 
 ### Client
 - **Vue.js** : ^3.5.13
 - **Vite** : ^6.3.5
-- **MediaBunny** : 1.26.0 (fixé)
+- **ConvertFlow** : 2.0.0 (fixé)
 - **Tailwind CSS** : ^4.0.0
 - **DaisyUI** : ^5.5.5
 
 ## 🔄 Mise à jour vers une version supérieure
 
-Si une version plus récente de MediaBunny sort (1.27.0, etc.) :
+Si une version plus récente de ConvertFlow sort (2.1.0, etc.) :
 
 ```bash
 # 1. Modifier package.json
 # server/package.json et client/package.json
-# "mediabunny": "1.27.0"
+# "convertflow-app": "2.1.0"
 
 # 2. Réinstaller
 rm -rf node_modules server/node_modules client/node_modules
 npm run install:all
 
 # 3. Vérifier les breaking changes
-# Consultez : https://github.com/Vanilagy/mediabunny/releases
+# Consultez : https://github.com/kubikub/convertflow-app/releases
 
 # 4. Adapter le code si nécessaire
 
@@ -186,17 +187,16 @@ npm run install:all
 npm run build
 ```
 
-## 📚 Documentation MediaBunny 1.26.0
+## 📚 Documentation ConvertFlow 2.0.0
 
-- [Documentation officielle](https://mediabunny.dev)
-- [GitHub](https://github.com/Vanilagy/mediabunny)
-- [Guide de conversion](https://mediabunny.dev/guide/converting-media-files)
-- [API Reference](https://mediabunny.dev/api/)
-- [Release 1.26.0](https://github.com/Vanilagy/mediabunny/releases/tag/v1.26.0)
+- [Documentation officielle](https://github.com/kubikub/convertflow-app)
+- [Guide FFmpeg](./FFMPEG_GUIDE.md)
+- [API Reference](./README.md#api-endpoints)
+- [Release 2.0.0](https://github.com/kubikub/convertflow-app/releases/tag/v2.0.0)
 
 ## ✅ Checklist post-installation
 
-- [ ] MediaBunny version 1.26.0 installée (serveur + client)
+- [ ] ConvertFlow version 2.0.0 installée (serveur + client)
 - [ ] Build Docker réussi sans erreurs TypeScript
 - [ ] Serveur démarre sur le port 3000
 - [ ] Interface accessible sur http://localhost:3000

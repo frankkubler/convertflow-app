@@ -1,4 +1,4 @@
-# 🚀 Démarrage Rapide - MediaBunny App v2.0 (FFmpeg)
+# 🚀 Démarrage Rapide - ConvertFlow App v2.0 (FFmpeg)
 
 ## ✨ Nouveautés v2.0
 
@@ -49,7 +49,7 @@ curl http://localhost:3000/api/health
 ### 2. Vérifier FFmpeg
 
 ```bash
-docker exec mediabunny-app ffmpeg -version
+docker exec convertflow-app ffmpeg -version
 
 # Devrait afficher : ffmpeg version 6.x
 ```
@@ -57,7 +57,7 @@ docker exec mediabunny-app ffmpeg -version
 ### 3. Vérifier Redis
 
 ```bash
-docker exec mediabunny-redis redis-cli ping
+docker exec convertflow-redis redis-cli ping
 
 # Devrait retourner : PONG
 ```
@@ -254,7 +254,7 @@ L'interface web permet :
 
 ```bash
 # Voir les logs en temps réel
-docker logs mediabunny-app -f
+docker logs convertflow-app -f
 
 # Arrêter l'application
 docker-compose down
@@ -268,13 +268,13 @@ docker-compose build --no-cache
 docker-compose up -d
 
 # Entrer dans le container
-docker exec -it mediabunny-app sh
+docker exec -it convertflow-app sh
 
 # Voir les fichiers uploadés
-docker exec mediabunny-app ls -lh /app/server/uploads
+docker exec convertflow-app ls -lh /app/server/uploads
 
 # Voir les fichiers convertis
-docker exec mediabunny-app ls -lh /app/server/output
+docker exec convertflow-app ls -lh /app/server/output
 ```
 
 ---
@@ -285,7 +285,7 @@ docker exec mediabunny-app ls -lh /app/server/output
 
 ```bash
 # Vérifier Redis
-docker logs mediabunny-redis
+docker logs convertflow-redis
 
 # Redémarrer Redis
 docker-compose restart redis
@@ -295,7 +295,7 @@ docker-compose restart redis
 
 ```bash
 # Vérifier FFmpeg
-docker exec mediabunny-app which ffmpeg
+docker exec convertflow-app which ffmpeg
 
 # Rebuild si nécessaire
 docker-compose build --no-cache
@@ -305,7 +305,7 @@ docker-compose build --no-cache
 
 ```bash
 # Voir les logs détaillés
-docker logs mediabunny-app -f
+docker logs convertflow-app -f
 
 # Vérifier les métadonnées du fichier
 curl http://localhost:3000/api/ffmpeg/metadata/FILE_ID
@@ -315,7 +315,7 @@ curl http://localhost:3000/api/ffmpeg/metadata/FILE_ID
 
 ## 🎉 Récapitulatif
 
-### ❌ Avant (MediaBunny Node.js)
+### ❌ Avant (ConvertFlow Node.js)
 
 ```
 Erreur: undecodable_source_codec

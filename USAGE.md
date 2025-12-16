@@ -1,4 +1,4 @@
-# Guide d'Utilisation - MediaBunny App
+# Guide d'Utilisation - ConvertFlow App
 
 ## 🚀 Démarrage rapide
 
@@ -92,11 +92,11 @@ ffmpeg -i input.mp4 -c:v libx264 -crf 32 -preset faster -c:a aac -b:a 96k output
 
 ### Problème 3: Warnings "Closing file descriptor"
 
-**Cause :** Limitation de MediaBunny avec Node.js
+**Cause :** Limitation de ConvertFlow avec Node.js
 
 **Impact :** Aucun - warnings seulement, l'application fonctionne
 
-**Note :** Ces warnings seront corrigés dans les futures versions de MediaBunny
+**Note :** Ces warnings seront corrigés dans les futures versions de ConvertFlow
 
 ## 🎯 Exemples d'utilisation
 
@@ -225,7 +225,7 @@ ffmpeg -f lavfi -i sine=frequency=440:duration=5 \
 
 ### 1. Support codec limité
 
-**Cause :** MediaBunny utilise WebCodecs qui a un support limité en Node.js
+**Cause :** ConvertFlow utilise WebCodecs qui a un support limité en Node.js
 
 **Impact :** 
 - H.265/HEVC ne fonctionne pas
@@ -255,7 +255,7 @@ WebCodecs est conçu pour le navigateur. En Node.js :
 
 ## 🚀 Migration vers FFmpeg (Production)
 
-Pour une application de production, remplacer MediaBunny par FFmpeg :
+Pour une application de production, utiliser ConvertFlow (FFmpeg) :
 
 ### Avantages FFmpeg
 
@@ -281,7 +281,7 @@ async function convertWithFFmpeg(input: string, output: string) {
 
 ## 📚 Ressources utiles
 
-- [MediaBunny Documentation](https://mediabunny.dev)
+- [FFmpeg Documentation](https://ffmpeg.org/documentation.html)
 - [FFmpeg Documentation](https://ffmpeg.org/documentation.html)
 - [WebCodecs API](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API)
 - [Guide FFmpeg (français)](https://www.libellules.ch/dotclear/index.php?pages/ffmpeg)
@@ -291,7 +291,7 @@ async function convertWithFFmpeg(input: string, output: string) {
 Si vous rencontrez un problème :
 
 1. Vérifiez que votre fichier est compatible (H.264+AAC)
-2. Consultez les logs : `docker logs mediabunny-app -f`
+2. Consultez les logs : `docker logs convertflow-app -f`
 3. Essayez avec un fichier de test FFmpeg
 4. Ouvrez une issue sur GitHub avec :
    - Type/taille du fichier

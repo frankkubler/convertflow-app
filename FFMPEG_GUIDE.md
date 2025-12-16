@@ -1,4 +1,4 @@
-# Guide FFmpeg - MediaBunny App v2.0
+# Guide FFmpeg - ConvertFlow App v2.0
 
 ## 🎉 Serveur FFmpeg Complet Implémenté !
 
@@ -41,15 +41,15 @@ docker-compose build --no-cache
 docker-compose up -d
 
 # Vérifier
-docker logs mediabunny-app
-docker logs mediabunny-redis
+docker logs convertflow-app
+docker logs convertflow-redis
 ```
 
 ### 2. Vérification FFmpeg
 
 ```bash
 # Vérifier FFmpeg dans le container
-docker exec mediabunny-app ffmpeg -version
+docker exec convertflow-app ffmpeg -version
 
 # Devrait afficher : ffmpeg version 6.x
 ```

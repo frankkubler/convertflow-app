@@ -29,7 +29,7 @@
 
 ## ⚙️ Formats et codecs supportés
 
-MediaBunny utilise l'API **WebCodecs** du navigateur, ce qui limite les formats supportés aux codecs natifs de votre environnement.
+ConvertFlow utilise FFmpeg côté serveur pour la conversion universelle de fichiers média.
 
 ### Codecs supportés
 
@@ -47,7 +47,7 @@ MediaBunny utilise l'API **WebCodecs** du navigateur, ce qui limite les formats 
 - Codecs propriétaires
 
 **Solutions:**
-1. 🌐 **Utiliser MediaBunny côté client** (navigateur) où WebCodecs est pleinement implémenté
+1. 🌐 **Utiliser ConvertFlow côté client** (navigateur) où WebCodecs est pleinement implémenté
 2. 🔄 **Pré-convertir avec FFmpeg** pour compatibilité universelle
 3. 🚀 **Migrer vers FFmpeg côté serveur** (voir [FFMPEG_GUIDE.md](FFMPEG_GUIDE.md))
 
@@ -58,7 +58,7 @@ MediaBunny utilise l'API **WebCodecs** du navigateur, ce qui limite les formats 
 ### Backend
 - **Runtime**: Node.js 20+ avec Express
 - **Langage**: TypeScript
-- **Conversion**: MediaBunny 1.26.0
+- **Conversion**: FFmpeg 8.x
 - **Upload**: Multer
 - **Sécurité**: Helmet.js, CORS
 
@@ -86,15 +86,15 @@ MediaBunny utilise l'API **WebCodecs** du navigateur, ce qui limite les formats 
 ```yaml
 # docker-compose.yml
 services:
-  mediabunny:
-    image: ghcr.io/frankkubler/mediabunny-app:latest
-    container_name: mediabunny-app
+  convertflow-app:
+    image: ghcr.io/frankkubler/convertflow-app:latest
+    container_name: convertflow-app
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - MAX_FILE_SIZE=500000000
+      - MAX_FILE_SIZE=10737418240
       # - HTTP_ALLOWED=true # décommenter si accès en HTTP
     volumes:
       - ./uploads:/app/server/uploads
@@ -112,8 +112,8 @@ Accéder à l'application sur `http://localhost:3000`
 
 **1. Cloner le dépôt**
 ```bash
-git clone https://github.com/frankkubler/mediabunny-app.git
-cd mediabunny-app
+git clone https://github.com/frankkubler/convertflow-app.git
+cd convertflow-app
 ```
 
 **2. Installer les dépendances**
@@ -155,12 +155,12 @@ npm start
 ## 📁 Structure du projet
 
 ```
-mediabunny-app/
+convertflow-app/
 ├── server/                # Backend Node.js + Express
 │   ├── src/
 │   │   ├── controllers/   # Logique métier
 │   │   ├── routes/        # Routes API
-│   │   ├── services/      # Services (MediaBunny)
+│   │   ├── services/      # Services (FFmpeg)
 │   │   ├── middleware/    # Middlewares
 │   │   └── utils/         # Utilitaires
 │   ├── uploads/           # Fichiers uploadés
@@ -250,8 +250,8 @@ docker-compose up -d
 
 | Image | Description |
 |-------|-------------|
-| `ghcr.io/frankkubler/mediabunny-app:latest` | Dernière version stable |
-| `ghcr.io/frankkubler/mediabunny-app:main` | Derniers commits (dev) |
+| `ghcr.io/frankkubler/convertflow-app:latest` | Dernière version stable |
+| `ghcr.io/frankkubler/convertflow-app:main` | Derniers commits (dev) |
 
 ## 📝 Développement
 
@@ -287,18 +287,15 @@ npm start
 
 ## 🐛 Dépannage
 
-### Erreur "undecodable_source_codec"
+### Conversion impossible ou erreur codec
 
-Cette erreur indique que le codec n'est pas supporté par WebCodecs.
+Si un format n'est pas reconnu ou échoue, utilisez FFmpeg en ligne de commande pour convertir :
 
-**Solutions:**
+```bash
+ffmpeg -i input.mov -c:v libx264 -c:a aac output.mp4
+```
 
-1. **Utiliser un fichier avec codec supporté** (H.264, VP8, VP9)
-2. **Pré-convertir avec FFmpeg:**
-   ```bash
-   ffmpeg -i input.mov -c:v libx264 -c:a aac output.mp4
-   ```
-3. **Migrer vers FFmpeg** pour support universel (voir [FFMPEG_GUIDE.md](FFMPEG_GUIDE.md))
+Consultez [FFMPEG_GUIDE.md](FFMPEG_GUIDE.md) pour plus d'exemples et de dépannage.
 
 ### Problème de dépendances
 
@@ -312,7 +309,7 @@ npm run install:all
 
 ```bash
 # Vérifier les logs
-docker logs mediabunny-app -f
+docker logs convertflow-app -f
 
 # Rebuild complet
 docker-compose down -v
@@ -344,34 +341,32 @@ docker-compose up -d
 
 ## 📚 Ressources
 
-- [MediaBunny Documentation](https://mediabunny.dev)
-- [MediaBunny GitHub](https://github.com/Vanilagy/mediabunny)
+- [FFmpeg Documentation](https://ffmpeg.org/documentation.html)
 - [Tailwind CSS v4](https://tailwindcss.com/docs)
 - [DaisyUI 5](https://daisyui.com)
 - [Vue.js 3](https://vuejs.org)
 - [Vite](https://vitejs.dev)
-- [WebCodecs API](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API)
 
 ## 🙏 Contributeurs
 
-Les contributions sont les bienvenues ! Consultez les [issues ouvertes](https://github.com/frankkubler/mediabunny-app/issues) pour la liste des tâches.
+Les contributions sont les bienvenues ! Consultez les [issues ouvertes](https://github.com/frankkubler/convertflow-app/issues) pour la liste des tâches.
 
 Utilisez les [conventional commits](https://www.conventionalcommits.org/) pour vos messages de commit.
 
 ## 📝 Licence
 
-Ce projet utilise MediaBunny sous licence MPL-2.0.
+Ce projet utilise FFmpeg sous licence LGPL et le code ConvertFlow sous licence MPL-2.0.
 
 ## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=frankkubler/mediabunny-app&type=Date)](https://star-history.com/#frankkubler/mediabunny-app&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=frankkubler/convertflow-app&type=Date)](https://star-history.com/#frankkubler/convertflow-app&Date)
 
 ---
 
 <div align="center">
 
 **Auteur**: Frank KUBLER  
-**Repository**: [github.com/frankkubler/mediabunny-app](https://github.com/frankkubler/mediabunny-app)
+**Repository**: [github.com/frankkubler/convertflow-app](https://github.com/frankkubler/convertflow-app)
 
 Si ce projet vous aide, n'hésitez pas à lui donner une ⭐ !
 
@@ -379,8 +374,8 @@ Si ce projet vous aide, n'hésitez pas à lui donner une ⭐ !
 
 ## About
 
-💾 Application web auto-hébergée moderne pour la conversion de fichiers média avec MediaBunny - Vue.js 3 + Node.js + TypeScript ⚙️
+💾 Application web auto-hébergée moderne pour la conversion de fichiers média avec FFmpeg - Vue.js 3 + Node.js + TypeScript ⚙️
 
 ### Topics
 
-`converter` `typescript` `media-conversion` `convert` `conversion` `video-converter` `audio-converter` `self-hosted` `file-converter` `file-conversion` `vuejs` `nodejs` `docker` `mediabunny` `tailwindcss` `daisyui` `vite` `webcodecs`
+`converter` `typescript` `media-conversion` `convert` `conversion` `video-converter` `audio-converter` `self-hosted` `file-converter` `file-conversion` `vuejs` `nodejs` `docker` `convertflow` `tailwindcss` `daisyui` `vite`
