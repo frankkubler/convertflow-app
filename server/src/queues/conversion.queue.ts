@@ -2,7 +2,7 @@ import Queue from 'bull';
 import { FFmpegService } from '../services/ffmpeg.service.js';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { readdirSync } from 'fs';
+import { readdirSync, unlinkSync } from 'fs';
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
@@ -52,6 +52,14 @@ conversionQueue.process('convert', 3, async (job) => {
       job.progress(percent);
     }
   );
+
+  // Supprimer le fichier source après conversion réussie
+  try {
+    unlinkSync(inputPath);
+    console.log(`[Queue] Fichier source supprimé: ${inputPath}`);
+  } catch (cleanupErr: any) {
+    console.warn(`[Queue] Impossible de supprimer le fichier source: ${cleanupErr.message}`);
+  }
 
   return {
     outputId,

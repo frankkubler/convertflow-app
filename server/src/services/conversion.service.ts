@@ -89,6 +89,15 @@ export class ConversionService {
       // Exécuter la conversion
       await conversion.execute();
 
+      // Supprimer le fichier source après conversion réussie
+      try {
+        const { unlinkSync } = await import('fs');
+        unlinkSync(sourcePath);
+        console.log(`[ConversionService] Fichier source supprimé: ${sourcePath}`);
+      } catch (cleanupErr: any) {
+        console.warn(`[ConversionService] Impossible de supprimer le fichier source: ${cleanupErr.message}`);
+      }
+
       return {
         outputId,
         outputPath: `/output/${path.basename(outputPath)}`,
