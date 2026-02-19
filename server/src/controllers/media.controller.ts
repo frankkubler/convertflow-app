@@ -32,7 +32,7 @@ export class MediaController {
 
   getMetadata = async (req: Request, res: Response) => {
     try {
-      const { fileId } = req.params;
+      const fileId = req.params.fileId as string;
       const uploadDir = process.env.UPLOAD_DIR || './uploads';
       const files = await this.mediaService.findFileById(uploadDir, fileId);
       
@@ -49,7 +49,7 @@ export class MediaController {
 
   deleteFile = async (req: Request, res: Response) => {
     try {
-      const { fileId } = req.params;
+      const fileId = req.params.fileId as string;
       this.mediaService.deleteFileById(fileId);
       res.json({ success: true, message: 'File deleted' });
     } catch (error: any) {

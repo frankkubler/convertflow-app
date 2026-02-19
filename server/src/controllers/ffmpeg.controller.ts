@@ -13,7 +13,7 @@ export class FFmpegController {
    */
   getMetadata = async (req: Request, res: Response) => {
     try {
-      const { fileId } = req.params;
+      const fileId = req.params.fileId as string;
       const uploadDir = process.env.UPLOAD_DIR || './uploads';
       
       // Trouver le fichier
@@ -110,7 +110,7 @@ export class FFmpegController {
    */
   getJobStatus = async (req: Request, res: Response) => {
     try {
-      const { jobId } = req.params;
+      const jobId = req.params.jobId as string;
       const job = await conversionQueue.getJob(jobId);
 
       if (!job) {
