@@ -21,8 +21,8 @@ RUN cd client && npm install
 # Copier le code source
 COPY . .
 
-# Build du client
-RUN cd client && npm run build
+# Build du client (VITE_API_URL vide = URL relative /api, compatible tous déploiements)
+RUN cd client && VITE_API_URL= npm run build
 
 # Build du serveur
 RUN cd server && npm run build

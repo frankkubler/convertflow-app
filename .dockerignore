@@ -1,0 +1,29 @@
+node_modules
+server/node_modules
+client/node_modules
+
+# Dist / build artifacts (reconstruits pendant le build Docker)
+client/dist
+server/dist
+
+# Fichiers .env (évite d'injecter des URLs hardcodées dans le bundle Vite)
+.env
+.env.local
+.env.*.local
+client/.env
+client/.env.local
+client/.env.*.local
+server/.env
+server/.env.local
+
+# Git
+.git
+.gitignore
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
