@@ -21,33 +21,32 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Middlewares
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
   contentSecurityPolicy: {
+    useDefaults: false,  // Désactive upgrade-insecure-requests (incompatible HTTP pur)
     directives: {
       defaultSrc: ["'self'"],
-      // Autorise les appels API côté client vers l'instance locale
+      baseUri: ["'self'"],
+      fontSrc: ["'self'", 'data:'],
+      formAction: ["'self'"],
+      frameAncestors: ["'self'"],
       connectSrc: [
         "'self'",
-        // Accès direct au backend (dev/local)
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-        // Accès via service docker interne/nginx
-        'http://convertflow-app:3000',
-        'http://nginx',
-        // Autoriser les schémas génériques (http/https/ws) pour les proxies
-        'http:',
+        'http:',    // autorise toutes les connexions HTTP (proxy, LXC, etc.)
         'https:',
         'ws:',
         'wss:',
       ],
       imgSrc: ["'self'", 'data:'],
       scriptSrc: ["'self'"],
+      scriptSrcAttr: ["'none'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       objectSrc: ["'none'"],
+      // upgradeInsecureRequests volontairement absent : app en HTTP pur
     }
   }
 }));
