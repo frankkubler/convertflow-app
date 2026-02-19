@@ -31,7 +31,7 @@ RUN cd server && npm run build
 RUN mkdir -p /app/server/uploads /app/server/output
 
 # Exposer le port
-EXPOSE 3000
+EXPOSE 3001
 
 # Démarrer l'application
 CMD ["npm", "start"]
