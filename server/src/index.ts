@@ -100,6 +100,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Error handler global (doit être APRÈS toutes les routes)
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('[Server] Unhandled error:', err.message, err.stack);
+  res.status(500).json({ success: false, message: err.message || 'Internal server error' });
+});
+
 // Démarrage
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
