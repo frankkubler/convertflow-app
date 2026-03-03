@@ -1,10 +1,15 @@
-FROM node:20-alpine AS base
+FROM nvidia/cuda:11.8.0-runtime-ubuntu22.04 AS base
 
-# Installer FFmpeg
-RUN apk add --no-cache ffmpeg
+# Dépendances de base + FFmpeg (build Ubuntu inclut NVENC si drivers présents)
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \
+		 ca-certificates curl ffmpeg \
+	&& rm -rf /var/lib/apt/lists/*
 
-# Vérifier installation FFmpeg
-RUN ffmpeg -version
+# Installer Node.js 20
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+	&& apt-get install -y --no-install-recommends nodejs \
+	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
