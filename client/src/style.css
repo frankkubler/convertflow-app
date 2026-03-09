@@ -41,7 +41,7 @@ body {
 /* Cartes et glassmorphism : backgrounds adaptés au dark */
 .glass-card, .card {
   background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(4px);
   border-radius: 1rem;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
   border: 1px solid rgba(255,255,255,0.2);
@@ -104,7 +104,7 @@ body {
 /* Glassmorphism et cartes */
 .glass-card, .card {
   background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(4px);
   border-radius: 1rem;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
   border: 1px solid rgba(255,255,255,0.2);
